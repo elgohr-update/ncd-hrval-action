@@ -52,12 +52,20 @@ function download {
     if [[ "${HELM_VER}" == "v3" ]]; then
       helmv3 repo rm stable
       helmv3 repo add stable https://charts.helm.sh/stable
-      helmv3 repo add "${CHART_REPO_MD5}" "${CHART_REPO}"
+      if [[ ${CHART_REPO} = *"charts.cdgfossil.com"* ]]; then
+        helmv3 repo add ${CHART_REPO_MD5} ${CHART_REPO} --username ${CHART_MUSEUM_USER} --password ${CHART_MUSEUM_PASSWD}
+      else
+        helmv3 repo add "${CHART_REPO_MD5}" "${CHART_REPO}"
+      fi
       helmv3 repo update
     else
       helm repo rm stable
       helm repo add stable https://charts.helm.sh/stable
-      helm repo add "${CHART_REPO_MD5}" "${CHART_REPO}"
+      if [[ ${CHART_REPO} = *"charts.cdgfossil.com"* ]]; then
+        helm repo add ${CHART_REPO_MD5} ${CHART_REPO} --username ${CHART_MUSEUM_USER} --password ${CHART_MUSEUM_PASSWD}
+      else
+        helm repo add "${CHART_REPO_MD5}" "${CHART_REPO}"
+      fi
       helm repo update
     fi
   fi
